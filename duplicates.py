@@ -1,8 +1,22 @@
+import filecmp
+import os
+import itertools
+import sys
 
 
-def are_files_duplicates(file_path1, file_path_2):
-    pass
-
+def compare_files(file_path1, file_path_2):
+    if filecmp.cmp(file_path1, file_path_2):
+        return True
+    return False
 
 if __name__ == '__main__':
-    pass
+    root_catalog = sys.argv[1]
+    files_list = []
+
+    for paths, dirs, files in os.walk(root_catalog):
+        for file_name in files:
+            files_list.append(os.path.join(paths, file_name))
+
+    for file1, file2 in itertools.combinations(files_list, 2):
+        if compare_files(file1, file2):
+            print("Duplicate files found: First file - '%s' and second file - '%s'" % (file1, file2))
